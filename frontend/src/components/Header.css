@@ -1,0 +1,85 @@
+.caption-left-middle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100%;
+    left: 0;
+    padding-left: 50px; 
+    
+  }
+  .bold-text {
+    font-weight: bold;
+    font-family: sans-serif;
+    font-size: 3rem; 
+    color: #E6E6FA; 
+    text-shadow: 
+    -1px -1px 0 #000,  
+     1px -1px 0 #000,  
+    -1px  1px 0 #000,  
+     1px  1px 0 #000; 
+  }
+  .carousel-indicators [data-bs-target]{
+    border-radius: 100%;
+    width: 10px;
+    height: 10px;
+  }
+  *{
+    margin:0px;
+    padding: 0px;
+    box-sizing: border-box;
+    font-family: sans-serif;
+  }
+  body{
+    background-color: #f0f0f0;
+    justify-content: center;
+  }
+  .card-container{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: -10px;
+  }
+    .card{
+    width: 275px;
+    background-color: #E6E6FA;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.2);
+    margin: 5px;
+  }
+  .card img{
+    
+    width: 100%;
+    height: 250px;
+    
+  }
+  
+  .card-content{
+    padding: 20px;
+    justify-content: center;
+  }
+  .card-content h3{
+    font-size: 28px;
+    margin-bottom: 8px;
+    
+    
+  }
+  .card-content .btn{
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #5FD85F;
+    text-decoration: none;
+    border-radius: 4px;
+    margin-top: 16px;
+  }
+  .primary-heading {
+    display: flex;
+    justify-content: center;
+    padding:15px;
+    width: 100%;
+    margin: 0;
+    font-size: 2.5rem;
+    line-height: 1.5;
+    color: #50154E; /* Text color for the heading */
+}
