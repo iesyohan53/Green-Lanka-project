@@ -15,7 +15,7 @@ const UsersList = ({ history }) => {
     const dispatch = useDispatch();
 
     // Use safe destructuring with fallback
-    const { loading, error, users } = useSelector(state => state.allusers || {});
+    const { loading, error, users } = useSelector(state => state.allUsers || {});
     const { isDeleted } = useSelector(state => state.user || {});
 
     useEffect(() => {
@@ -40,11 +40,7 @@ const UsersList = ({ history }) => {
     const setUsers = () => {
         const data = {
             columns: [
-                {
-                    label: 'User ID',
-                    field: 'id',
-                    sort: 'asc',
-                },
+               
                 {
                     label: 'Name',
                     field: 'name',
@@ -68,11 +64,11 @@ const UsersList = ({ history }) => {
             rows: [],
         };
 
-        // Ensure users is an array before mapping
+        
         if (Array.isArray(users)) {
             users.forEach(user => {
                 data.rows.push({
-                    id: user._id, // Use _id for consistency
+                    
                     name: user.name,
                     email: user.email,
                     role: user.role,
