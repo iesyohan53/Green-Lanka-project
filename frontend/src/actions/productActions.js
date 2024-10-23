@@ -72,23 +72,23 @@ export const newProduct = (productData) => async (dispatch) => {
  }
 
  // delete product(admin)
- export const deleteProduct = (productData) => async (dispatch) => {
-    try{
-            dispatch({type:DELETE_PRODUCT_REQUEST})
-        
-            const { data } = await axios.delete('/api/v1/admin/product/${id}')
+export const deleteProduct = (id) => async (dispatch) => {
+    try {
+        dispatch({ type: DELETE_PRODUCT_REQUEST });
 
-            dispatch({
-                type:DELETE_PRODUCT_SUCCESS,
-                payload:data.success
-            })
-    }catch (error) {
+        const { data } = await axios.delete(`/api/v1/admin/product/${id}`);
+
         dispatch({
-            type:DELETE_PRODUCT_FAIL,
-            payload:error.response.data.message
-        })
+            type: DELETE_PRODUCT_SUCCESS,
+            payload: data.success,
+        });
+    } catch (error) {
+        dispatch({
+            type: DELETE_PRODUCT_FAIL,
+            payload: error.response.data.message,
+        });
     }
- }
+};
  // admin products
  export const getAdminProducts = () => async (dispatch) => {
     try {
