@@ -14,9 +14,8 @@ const ProductsList = ({ history }) => {
     const alert = useAlert();
     const dispatch = useDispatch();
 
-    // Corrected the typo from 'eror' to 'error'
-    const { loading, error, products } = useSelector(state => state.products);
-    const{error: deleteError, isDeleted} = useSelector(state => state.product)
+    const { loading, error, products } = useSelector((state) => state.products);
+    const { error: deleteError, isDeleted } = useSelector((state) => state.product);
 
     useEffect(() => {
         dispatch(getAdminProducts());
@@ -31,17 +30,19 @@ const ProductsList = ({ history }) => {
             dispatch(clearErrors());
         }
 
-        if(isDeleted){
-            alert.success('Product deleted successfullly');
-            history.push('/admin/products');
-            dispatch({type: DELETE_PRODUCT_RESET })
+        if (isDeleted) {
+            alert.success('Product deleted successfully');
+            //dispatch(getAdminProducts());
+            //history.push('/admin/products');
+            dispatch({ type: DELETE_PRODUCT_RESET });
         }
 
-    }, [dispatch, alert, error, deleteError, isDeleted,history]);
+    }, [dispatch, alert, error, deleteError, isDeleted, history]);
 
+    
     const setProducts = () => {
         const data = {
-            columns: [  // Corrected 'column' to 'columns'
+            columns: [
                 {
                     label: 'ID',
                     field: 'id',
@@ -54,7 +55,7 @@ const ProductsList = ({ history }) => {
                 },
                 {
                     label: 'Price',
-                    field: 'price',  // Corrected 'proce' to 'price'
+                    field: 'price',
                     sort: 'asc'
                 },
                 {
@@ -70,7 +71,6 @@ const ProductsList = ({ history }) => {
             rows: []
         };
 
-        // Ensure products is defined and is an array
         if (products && Array.isArray(products)) {
             products.forEach(product => {
                 data.rows.push({
@@ -93,11 +93,10 @@ const ProductsList = ({ history }) => {
         }
 
         return data;
-        
-        }
-        const deleteProductHandler = (id) =>{
-            dispatch(deleteProduct(id))
     };
+    const deleteProductHandler = (id) => {
+        dispatch(deleteProduct(id));
+      };
 
     return (
         <Fragment>

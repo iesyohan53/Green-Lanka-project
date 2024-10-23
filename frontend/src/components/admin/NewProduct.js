@@ -9,182 +9,194 @@ import { useNavigate } from 'react-router-dom';
 
 const NewProduct = ({history}) => {
 
-  const [name,setName] = useState('');
-  const [price,setPrice] = useState(0);
-  const [description,setDescription] = useState('');
-  const [category,setCategory] = useState('');
-  const [availability,setAvailability] = useState(0);
-  const [images,setImages] = useState([]);
-  const [imagesPreview,setImagesPreview] = useState([]);
-
-  const categories = [
-    'Kithul_Products',
-    'Kithul_Sweets',
-    'Special_Kithul_Sweets'
-  ]
-
-  const availabilities = [
-    'Yes',
-    'No',
-   
-  ]
-  const alert = useAlert();
+    const [id, setId] = useState('');
+    const [name, setName] = useState('');
+    const [price, setPrice] = useState(0);
+    const [description, setDescription] = useState('');
+    const [category, setCategory] = useState('');
+    const [availability, setAvailability] = useState('Yes'); // Start with 'Yes'
+    const [images, setImages] = useState([]);
+    const [imagesPreview, setImagesPreview] = useState([]);
+  
+    const categories = [
+      'Kithul_Products',
+      'Kithul_Sweets',
+      'Special_Kithul_Sweets'
+    ];
+  
+    const availabilities = [
+      'Yes',
+      'No',
+    ];
+  
+    const alert = useAlert();
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+  
     const {loading, error, success} = useSelector((state) => state.newProduct);
-
+  
     useEffect(() => {
-        if (error) {
-            alert.error(error);
-            dispatch(clearErrors())
-        }
-
-        if (success){
-            navigate('/admin/products');
-            alert.success('Product created successfully')
-            dispatch({type: NEW_PRODUCT_RESET})
-        }
-
-      }, [dispatch, alert, success, error, navigate])
-
-      const submitHandler = (e) => {
-        e.preventDefault();
-
-        const formData = new FormData();
-        formData.set('name',name);
-        formData.set('price',price);
-        formData.set('description',description);
-        formData.set('category',category);
-        formData.set('availability',availability);
-        
-
-       images.forEach(image =>{
-      formData.append('images',image)
-       })
-
-        dispatch(newProduct(formData))
+      if (error) {
+        alert.error(error);
+        dispatch(clearErrors());
       }
-      
-      const onChange = e => {
-
-        const files = Array.from(e.target.files)
-
-        setImagesPreview([]);
-        setImages([])
-
-        files.forEach(file => {
-          const reader = new FileReader();
-        
-          reader.onload = () => {
-            if(reader.readyState ===2){
-              setImagesPreview(oldArray => [...oldArray, reader.result])
-              setImages(oldArray => [...oldArray, reader.result])
-            }
+  
+      if (success) {
+        navigate('/admin/products');
+        alert.success('Product created successfully');
+        dispatch({type: NEW_PRODUCT_RESET});
+      }
+    }, [dispatch, alert, success, error, navigate]);
+  
+    const submitHandler = (e) => {
+      e.preventDefault();
+  
+      const formData = new FormData();
+      formData.set('product_Id', id);
+      formData.set('product_name', name);
+      formData.set('price', price);
+      formData.set('description', description);
+      formData.set('category', category);
+      formData.set('availability', availability);
+  
+      images.forEach(image => {
+        formData.append('images', image);
+      });
+  
+      dispatch(newProduct(formData));
+  
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+    };
+  
+    const onChange = e => {
+      const files = Array.from(e.target.files);
+  
+      setImagesPreview([]);
+      setImages([]);
+  
+      files.forEach(file => {
+        const reader = new FileReader();
+  
+        reader.onload = () => {
+          if(reader.readyState === 2) {
+            setImagesPreview(oldArray => [...oldArray, reader.result]);
+            setImages(oldArray => [...oldArray, reader.result]);
           }
-
-          reader.readAsDataURL(file)
-          
-        })
-
-      }
-
-
-  return (
-<Fragment>
-    <MetaData title={'New Product'}/>
+        };
+  
+        reader.readAsDataURL(file);
+      });
+    };
+  
+    return (
+      <Fragment>
+        <MetaData title={'New Product'} />
         <div className="row">
-            <div className="col-12 col-md-2">
-                <Sidebar/>
-            </div>
-            <div className="col-12 col-md-10">
-                    <form className="shadow-lg form-container" onSubmit={submitHandler} encType='multipart/form-data'>
-                        <h1 className="mb-4 text-center">New Product</h1>
-
-                        <div className="form-group">
-                            <label htmlFor="name_field">Name</label>
-                            <input
-                                type="text"
-                                id="name_field"
-                                className="form-control"
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="price_field">Price</label>
-                            <input
-                                type="text"
-                                id="price_field"
-                                className="form-control"
-                                value={price}
-                                onChange={(e) => setPrice(e.target.value)}
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="description_field">Description</label>
-                            <textarea className="form-control" id="description_field" rows="6" value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
-                        </div>
-
-                        <div className="form-group">
-                            <label htmlFor="category_field">Category</label>
-                            <select className="form-control" id="category_field" value={category}
-                            onChange={(e) => setCategory(e.target.value)}>
-                                {categories.map(category => (
-                                    <option key={category} value={category}>{category}</option>
-                                ))}
-                            </select>
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="stock_field">Availability</label>
-                            <select className="form-control" id="stock_field" value={availability}
-                            onChange={(e) => setAvailability(e.target.value)}>
-                                {availabilities.map(availability => (
-                                    <option key={availability} value={availability}>{availability}</option>
-                                ))}
-                            </select>
-                        </div>
-                        
-
-                        <div className='form-group'>
-                            <label>Images</label>
-                            <div className='custom-file'>
-                                <input
-                                    type='file'
-                                    name='product_images'
-                                    className='custom-file-input'
-                                    id='customFile'
-                                    onChange={onChange}
-                                    multiple
-                                />
-                                <label className='custom-file-label' htmlFor='customFile'>
-                                    Choose Images
-                                </label>
-                            </div>
-
-                            {imagesPreview.map(img => (
-                                <img src={img} key={img} alt="images Preview" className="mt-3 mr-2" width="55" height="52"/>
-                            ))}
-                        </div>
-
-                        <button
-                            id="login_button"
-                            type="submit"
-                            className="btn btn-primary btn-block py-3"
-                            disabled={loading ? true : false}
-                        >
-                            CREATE
-                        </button>
-                    </form>
-                
-            </div>
+          <div className="col-12 col-md-2">
+            <Sidebar />
+          </div>
+          <div className="col-12 col-md-10">
+            <form className="shadow-lg form-container" onSubmit={submitHandler} encType='multipart/form-data'>
+              <h1 className="mb-4 text-center">New Product</h1>
+              <div className="form-group">
+                <label htmlFor="name_field">Product ID</label>
+                <input
+                  type="text"
+                  id="name_field"
+                  className="form-control"
+                  value={id}
+                  onChange={(e) => setId(e.target.value)}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="name_field">Name</label>
+                <input
+                  type="text"
+                  id="name_field"
+                  className="form-control"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+  
+              <div className="form-group">
+                <label htmlFor="price_field">Price</label>
+                <input
+                  type="text"
+                  id="price_field"
+                  className="form-control"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                />
+              </div>
+  
+              <div className="form-group">
+                <label htmlFor="description_field">Description</label>
+                <textarea
+                  className="form-control"
+                  id="description_field"
+                  rows="6"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}>
+                </textarea>
+              </div>
+  
+              <div className="form-group">
+                <label htmlFor="category_field">Category</label>
+                <select className="form-control" id="category_field" value={category}
+                        onChange={(e) => setCategory(e.target.value)}>
+                  {categories.map(category => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
+                </select>
+              </div>
+  
+              <div className="form-group">
+                <label htmlFor="stock_field">Availability</label>
+                <select className="form-control" id="stock_field" value={availability}
+                        onChange={(e) => setAvailability(e.target.value)}>
+                  {availabilities.map(availabilityOption => (
+                    <option key={availabilityOption} value={availabilityOption}>{availabilityOption}</option>
+                  ))}
+                </select>
+              </div>
+  
+              <div className='form-group'>
+                <label>Images</label>
+                <div className='custom-file'>
+                  <input
+                    type='file'
+                    name='product_images'
+                    className='custom-file-input'
+                    id='customFile'
+                    onChange={onChange}
+                    multiple
+                  />
+                  <label className='custom-file-label' htmlFor='customFile'>
+                    Choose Images
+                  </label>
+                </div>
+  
+                {imagesPreview.map(img => (
+                  <img src={img} key={img} alt="images Preview" className="mt-3 mr-2" width="55" height="52"/>
+                ))}
+              </div>
+  
+              <button
+                id="login_button"
+                type="submit"
+                className="btn btn-primary btn-block py-3"
+                disabled={loading ? true : false}
+              >
+                CREATE
+              </button>
+            </form>
+          </div>
         </div>
-    
-</Fragment>
-
-  )
-}
-
-export default NewProduct
+      </Fragment>
+    );
+  }
+  
+  export default NewProduct;  

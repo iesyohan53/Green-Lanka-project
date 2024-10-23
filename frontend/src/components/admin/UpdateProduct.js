@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { useParams } from 'react-router-dom';
 
 const UpdateProduct = ({ match }) => {
-    const [name, setName] = useState('');
+    const [product_name, setName] = useState('');
     const [price, setPrice] = useState(0);
     const [description, setDescription] = useState('');
     const [category, setCategory] = useState('');
@@ -38,7 +38,7 @@ const UpdateProduct = ({ match }) => {
         if (product && product._id !== productId) {
             dispatch(getProductDetails(productId));
         } else {
-            setName(product.name);
+            setName(product.product_name);
             setPrice(product.price);
             setDescription(product.description);
             setCategory(product.category);
@@ -66,7 +66,7 @@ const UpdateProduct = ({ match }) => {
     const submitHandler = (e) => {
         e.preventDefault();
         const formData = new FormData();
-        formData.set('name', name);
+        formData.set('name', product_name);
         formData.set('price', price);
         formData.set('description', description);
         formData.set('category', category);
@@ -110,7 +110,7 @@ const UpdateProduct = ({ match }) => {
                                 type="text"
                                 id="name_field"
                                 className="form-control"
-                                value={name}
+                                value={product_name}
                                 onChange={(e) => setName(e.target.value)}
                             />
                         </div>

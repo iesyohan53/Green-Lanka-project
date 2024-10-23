@@ -35,7 +35,7 @@ function NavScrollExample() {
               <Nav.Link as={Link} to="/about" style={{ color: 'white' }}>About Us</Nav.Link>
               <Nav.Link as={Link} to="/products" style={{ color: 'white' }}>Products</Nav.Link>
               <Nav.Link as={Link} to="/contact" style={{ color: 'white' }}>Contact Us</Nav.Link>
-              <Nav.Link as={Link} to="/dashboard" style={{ color: 'white' }}>DashBoard</Nav.Link>
+              
             </Nav>
             <Form className="d-flex">
               <div className='col-12 col-md-6 mt-2 mt-md-0'>
