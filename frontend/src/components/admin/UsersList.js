@@ -40,7 +40,6 @@ const UsersList = ({ history }) => {
     const setUsers = () => {
         const data = {
             columns: [
-               
                 {
                     label: 'Name',
                     field: 'name',
@@ -64,7 +63,7 @@ const UsersList = ({ history }) => {
             rows: [],
         };
 
-        
+        // Ensure users is an array before mapping
         if (Array.isArray(users)) {
             users.forEach(user => {
                 data.rows.push({

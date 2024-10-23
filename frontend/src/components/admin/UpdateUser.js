@@ -1,14 +1,13 @@
 import React, { Fragment, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate, useParams } from 'react-router-dom'; 
 import MetaData from '../layout/MetaData';
 import Sidebar from './sidebar';
 import { useAlert } from 'react-alert';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateUser,getUserDetails, clearErrors } from '../../actions/userActions';
+import { updateUser, getUserDetails, clearErrors } from '../../actions/userActions';
 import { UPDATE_USER_RESET } from '../../constants/userConstants';
 
-const UpdateUser = ({history, match}) => {
-
+const UpdateUser = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [role, setRole] = useState('');
@@ -16,19 +15,18 @@ const UpdateUser = ({history, match}) => {
     const alert = useAlert();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { id: userId } = useParams();  // Use `useParams` to get the user ID
 
-    const { error, isUpdated } = useSelector((state) => state.user);
-    const { user } = useSelector(state => state.userDetails);
-
-    const userId = match.params.id;
+    const { error, isUpdated } = useSelector((state) => state.user || {});
+    const { user = {} } = useSelector((state) => state.userDetails || {});
 
     useEffect(() => {
         if (user && user._id !== userId) {
-            dispatch(getUserDetails(userId))
-        }else{
-            setName(user.name);
-            setEmail(user.email);
-            setRole(user.role);
+            dispatch(getUserDetails(userId));
+        } else {
+            setName(user.name || '');
+            setEmail(user.email || '');
+            setRole(user.role || 'user'); // Default to 'user' role if not set
         }
 
         if (error) {
@@ -38,84 +36,83 @@ const UpdateUser = ({history, match}) => {
 
         if (isUpdated) {
             alert.success('User updated successfully');
-            history.pushState('/admin/users')
             dispatch({ type: UPDATE_USER_RESET });
-            navigate('/me');
+            navigate('/admin/users');
         }
-    }, [dispatch, alert, isUpdated, error, history]);
+    }, [dispatch, alert, isUpdated, error, user, userId, navigate]);
 
     const submitHandler = (e) => {
         e.preventDefault();
+        
         const formData = new FormData();
         formData.set('name', name);
         formData.set('email', email);
         formData.set('role', role);
 
-        dispatch(updateUser(user._id,formData));
+        dispatch(updateUser(user._id, formData));
     };
 
-  return (
-    <Fragment>
+    return (
+        <Fragment>
             <MetaData title={'Update User'} />
             <div className="row">
                 <div className="col-12 col-md-2">
                     <Sidebar />
                 </div>
                 <div className="col-12 col-md-10">
-                <div className="row wrapper">
-                <div className="col-10 col-lg-5">
-                    <form className="shadow-lg" onSubmit={submitHandler}>
-                        <h1 className="mt-2 mb-5">Update User</h1>
+                    <div className="row wrapper">
+                        <div className="col-10 col-lg-5">
+                            <form className="shadow-lg" onSubmit={submitHandler}>
+                                <h1 className="mt-2 mb-5">Update User</h1>
 
-                        <div className="form-group">
-                            <label for="name_field">Name</label>
-                            <input 
-								type="name" 
-								id="name_field" 
-								className="form-control"
-                                name='name'
-                                value={name}
-                                onChange={(e) => setName(e.target.value)}
-                            />
-                        </div>
+                                <div className="form-group">
+                                    <label htmlFor="name_field">Name</label>
+                                    <input
+                                        type="text"
+                                        id="name_field"
+                                        className="form-control"
+                                        name="name"
+                                        value={name}
+                                        onChange={(e) => setName(e.target.value)}
+                                    />
+                                </div>
 
-                        <div className="form-group">
-                            <label for="email_field">Email</label>
-                            <input
-                                type="email"
-                                id="email_field"
-                                className="form-control"
-                                name='email'
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </div>
+                                <div className="form-group">
+                                    <label htmlFor="email_field">Email</label>
+                                    <input
+                                        type="email"
+                                        id="email_field"
+                                        className="form-control"
+                                        name="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                    />
+                                </div>
 
-                        <div className="form-group">
-                                    <label for="role_field">Role</label>
-
+                                <div className="form-group">
+                                    <label htmlFor="role_field">Role</label>
                                     <select
                                         id="role_field"
                                         className="form-control"
-                                        name='role'
+                                        name="role"
                                         value={role}
                                         onChange={(e) => setRole(e.target.value)}
                                     >
-                                        <option value="user">user</option>
-                                        <option value="admin">admin</option>
+                                        <option value="user">User</option>
+                                        <option value="admin">Admin</option>
                                     </select>
                                 </div>
 
-                        <button type="submit" className="btn update-btn btn-block mt-4 mb-3" >Update</button>
-                    </form>
-                </div>
-            </div>
-        
-                       
+                                <button type="submit" className="btn update-btn btn-block mt-4 mb-3">
+                                    Update
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </Fragment>
-  )
-}
+    );
+};
 
-export default UpdateUser
+export default UpdateUser;
